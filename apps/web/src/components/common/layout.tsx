@@ -2,6 +2,7 @@ import type React from "react";
 import type { ReactNode } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { DemoAlert } from "@/components/demo-alert";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { isDemoMode } from "@/constants/urls";
 import { useUserPreferencesEffects } from "@/hooks/use-user-preferences-effects";
@@ -63,13 +64,14 @@ function Layout({ children, className }: LayoutProps) {
         <AppSidebar />
         <SidebarInset
           className={cn(
-            "m-2 flex flex-1 flex-col overflow-auto rounded-xl border border-border/80 bg-background shadow-sm/5",
+            "m-2 flex flex-1 flex-col overflow-auto rounded-xl border border-border/80 bg-background pb-[calc(env(safe-area-inset-bottom)+5.5rem)] shadow-sm/5 md:pb-0",
             className,
           )}
         >
           {isDemoMode && <DemoAlert />}
           {children}
         </SidebarInset>
+        <MobileBottomNav />
       </SidebarProvider>
     </div>
   );

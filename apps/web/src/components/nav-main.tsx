@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
+import { usePrimaryNavigationItems } from "@/components/primary-navigation";
 import {
   Collapsible,
   CollapsiblePanel,
@@ -13,41 +14,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { usePendingInvitations } from "@/hooks/queries/invitation/use-pending-invitations";
-import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 
 export function NavMain() {
-  const { data: workspace } = useActiveWorkspace();
   const navigate = useNavigate();
-  const { data: invitations = [] } = usePendingInvitations();
+  const navItems = usePrimaryNavigationItems();
 
-  if (!workspace) return null;
-
-  const pendingCount = invitations.length;
-
-  const navItems = [
-    {
-      title: "Projects",
-      url: `/dashboard/workspace/${workspace.id}`,
-      isActive:
-        window.location.pathname === `/dashboard/workspace/${workspace.id}`,
-      badge: null,
-    },
-    {
-      title: "Members",
-      url: `/dashboard/workspace/${workspace.id}/members`,
-      isActive:
-        window.location.pathname ===
-        `/dashboard/workspace/${workspace.id}/members`,
-      badge: null,
-    },
-    {
-      title: "Invitations",
-      url: "/dashboard/invitations",
-      isActive: window.location.pathname === "/dashboard/invitations",
-      badge: pendingCount > 0 ? pendingCount : null,
-    },
-  ];
+  if (!navItems.length) return null;
 
   return (
     <Collapsible defaultOpen className="group/collapsible">
