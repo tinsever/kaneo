@@ -10,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { UserAvatar } from "@/components/user-avatar";
 import { shortcuts } from "@/constants/shortcuts";
 import useGetProject from "@/hooks/queries/project/use-get-project";
 import useGetTask from "@/hooks/queries/task/use-get-task";
@@ -55,7 +56,7 @@ export default function TaskLayout({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <SidebarTrigger className="-ml-1 h-7 w-7 cursor-pointer text-foreground/85 hover:text-foreground" />
+                    <SidebarTrigger className="-ml-1 hidden h-7 w-7 cursor-pointer text-foreground/85 hover:text-foreground md:flex" />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="flex items-center gap-2 text-[10px]">
@@ -98,6 +99,9 @@ export default function TaskLayout({
 
             <div className="flex shrink-0 items-center gap-1.5">
               {headerActions}
+              <div className="md:hidden">
+                <UserAvatar settingsPath="/dashboard/settings/account/preferences" />
+              </div>
             </div>
           </div>
         </Layout.Header>

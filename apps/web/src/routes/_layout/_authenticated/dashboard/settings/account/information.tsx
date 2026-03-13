@@ -162,7 +162,7 @@ function RouteComponent() {
   return (
     <>
       <PageTitle title="Personal Information" />
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="mx-auto max-w-4xl space-y-6 px-3 pb-6 md:space-y-8 md:px-0">
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold">Personal Information</h1>
           <p className="text-muted-foreground">
@@ -178,7 +178,7 @@ function RouteComponent() {
             </p>
           </div>
 
-          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
+          <div className="space-y-4 rounded-md border border-border bg-sidebar p-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <p className="text-sm font-medium">Profile picture</p>
@@ -200,7 +200,7 @@ function RouteComponent() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-0.5">
                           <FormLabel className="text-sm font-medium">
                             Full name
@@ -208,7 +208,7 @@ function RouteComponent() {
                         </div>
                         <FormControl>
                           <Input
-                            className="w-48"
+                            className="w-full md:w-48"
                             placeholder="Enter your name"
                             {...field}
                           />
@@ -226,7 +226,7 @@ function RouteComponent() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-0.5">
                           <FormLabel className="text-sm font-medium">
                             Email
@@ -234,7 +234,7 @@ function RouteComponent() {
                         </div>
                         <FormControl>
                           <Input
-                            className="w-48"
+                            className="w-full md:w-48"
                             placeholder="Enter your email"
                             {...field}
                             disabled

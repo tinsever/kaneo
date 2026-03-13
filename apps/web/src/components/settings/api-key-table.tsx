@@ -109,7 +109,58 @@ export function ApiKeyTable({ apiKeys, isLoading }: ApiKeyTableProps) {
   return (
     <>
       <Frame>
-        <Table>
+        <div className="space-y-3 p-3 md:hidden">
+          {apiKeys.map((apiKey) => {
+            const expiration = getExpirationState(apiKey.expiresAt);
+
+            return (
+              <div
+                key={apiKey.id}
+                className={cn(
+                  "rounded-xl border border-border/80 bg-card p-3 shadow-xs/5",
+                  expiration.isExpired &&
+                    "border-destructive/20 bg-destructive/5",
+                )}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div
+                      className={cn(
+                        "truncate font-medium",
+                        expiration.isExpired && "text-destructive-foreground",
+                      )}
+                    >
+                      {apiKey.name || "Unnamed Key"}
+                    </div>
+                    <code className="mt-1 inline-flex rounded border border-border bg-background px-2 py-1 text-[11px]">
+                      {apiKey.start}...
+                    </code>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    className="text-destructive hover:text-destructive"
+                    onClick={() => setPendingDeleteId(apiKey.id)}
+                    disabled={deletingId === apiKey.id}
+                    aria-label={`Delete ${apiKey.name || "API key"}`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="mt-3 flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                  <span>Created {formatDate(apiKey.createdAt)}</span>
+                  {expiration.isExpired ? (
+                    <Badge variant="error">Expired {expiration.label}</Badge>
+                  ) : (
+                    <span>{expiration.label}</span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <Table className="hidden md:table">
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>

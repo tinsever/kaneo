@@ -14,10 +14,12 @@ import { VersionDisplay } from "@/components/version-display";
 import { WorkspaceSwitcher } from "@/components/workspace-switcher";
 import { shortcuts } from "@/constants/shortcuts";
 import { useRegisterShortcuts } from "@/hooks/use-keyboard-shortcuts";
+import { useIsMobile } from "@/hooks/use-mobile";
 import Search from "./search";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { toggleSidebar } = useSidebar();
+  const isMobile = useIsMobile();
 
   useRegisterShortcuts({
     modifierShortcuts: {
@@ -26,6 +28,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
     },
   });
+
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <Sidebar

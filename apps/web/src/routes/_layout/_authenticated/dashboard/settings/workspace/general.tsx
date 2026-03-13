@@ -224,7 +224,7 @@ function RouteComponent() {
   return (
     <>
       <PageTitle title="General Settings" />
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="mx-auto max-w-4xl space-y-6 px-3 pb-6 md:space-y-8 md:px-0">
         <div className="space-y-2">
           <h1 className="text-2xl font-semibold">General Settings</h1>
           <p className="text-muted-foreground">
@@ -240,7 +240,7 @@ function RouteComponent() {
             </p>
           </div>
 
-          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
+          <div className="space-y-4 rounded-md border border-border bg-sidebar p-4">
             <Form {...workspaceForm}>
               <form className="space-y-4">
                 <FormField
@@ -248,7 +248,7 @@ function RouteComponent() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-0.5">
                           <FormLabel className="text-sm font-medium">
                             Workspace name
@@ -259,7 +259,7 @@ function RouteComponent() {
                         </div>
                         <FormControl>
                           <Input
-                            className="w-64"
+                            className="w-full md:w-64"
                             placeholder="Enter workspace name"
                             {...field}
                           />
@@ -277,7 +277,7 @@ function RouteComponent() {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-0.5">
                           <FormLabel className="text-sm font-medium">
                             Description
@@ -288,7 +288,7 @@ function RouteComponent() {
                         </div>
                         <FormControl>
                           <Input
-                            className="w-64"
+                            className="w-full md:w-64"
                             placeholder="Enter workspace description"
                             {...field}
                           />
@@ -311,8 +311,8 @@ function RouteComponent() {
             </p>
           </div>
 
-          <div className="space-y-4 border border-border rounded-md p-4 bg-sidebar">
-            <div className="flex items-center justify-between">
+          <div className="space-y-4 rounded-md border border-border bg-sidebar p-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div className="space-y-0.5">
                 <p className="text-sm font-medium">Delete workspace</p>
                 <p className="text-xs text-muted-foreground">

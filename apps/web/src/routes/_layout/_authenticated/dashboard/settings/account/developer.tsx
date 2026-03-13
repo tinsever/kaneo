@@ -68,9 +68,11 @@ function RouteComponent() {
                 <Button
                   onClick={() => setCreateDialogOpen(true)}
                   className="gap-2"
+                  size="sm"
+                  aria-label="Create API key"
                 >
                   <Plus className="size-4" />
-                  Create API Key
+                  <span className="hidden md:inline">Create API Key</span>
                 </Button>
               </CardAction>
             </CardHeader>

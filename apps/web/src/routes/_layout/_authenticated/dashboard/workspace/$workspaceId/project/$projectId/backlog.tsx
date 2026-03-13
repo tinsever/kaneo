@@ -1,9 +1,21 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
-import { ArrowRight, Calendar, Filter, Plus, User, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Calendar,
+  Filter,
+  Plus,
+  User,
+  X,
+} from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BacklogListView from "@/components/backlog-list-view";
+import {
+  BoardFilterMenu,
+  BoardViewToggle,
+} from "@/components/board/board-toolbar";
 import ProjectLayout from "@/components/common/project-layout";
 import PageTitle from "@/components/page-title";
 import CreateTaskModal from "@/components/shared/modals/create-task-modal";
@@ -322,10 +334,104 @@ function RouteComponent() {
       projectId={projectId}
       workspaceId={workspaceId}
       activeView="backlog"
+      mobileHeaderStart={
+        <div className="flex min-w-0 items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() =>
+              navigate({
+                to: "/dashboard/workspace/$workspaceId",
+                params: { workspaceId },
+              })
+            }
+            className="size-7 shrink-0"
+            aria-label="Back to projects"
+          >
+            <ArrowLeft className="size-4" />
+          </Button>
+          <div className="min-w-0">
+            <div className="truncate text-sm font-medium text-foreground">
+              {project?.name ?? "Project"}
+            </div>
+          </div>
+        </div>
+      }
+      mobileHeaderEnd={
+        <>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() => setIsTaskModalOpen(true)}
+            className="size-7"
+            aria-label="Plan task"
+          >
+            <Plus className="size-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={handleMoveAllPlannedToTodo}
+            className="size-7"
+            aria-label="Move all planned tasks to to do"
+          >
+            <ArrowRight className="size-4" />
+          </Button>
+          <BoardViewToggle
+            viewMode="list"
+            setViewMode={(mode) => {
+              setViewMode(mode);
+              if (mode === "board") {
+                navigate({
+                  to: "/dashboard/workspace/$workspaceId/project/$projectId/board",
+                  params: { workspaceId, projectId },
+                });
+              }
+            }}
+            compact
+          />
+          <BoardFilterMenu
+            project={project}
+            filters={{
+              status: null,
+              priority: filters.priority ? [filters.priority] : null,
+              assignee: filters.assignee ? [filters.assignee] : null,
+              dueDate: filters.dueDate ? [filters.dueDate] : null,
+              labels: filters.labels,
+            }}
+            updateFilter={(key, value) => {
+              if (key === "priority") {
+                updateFilter(
+                  "priority",
+                  Array.isArray(value) ? (value[0] ?? null) : null,
+                );
+              }
+              if (key === "assignee") {
+                updateFilter(
+                  "assignee",
+                  Array.isArray(value) ? (value[0] ?? null) : null,
+                );
+              }
+              if (key === "dueDate") {
+                updateFilter(
+                  "dueDate",
+                  Array.isArray(value) ? (value[0] ?? null) : null,
+                );
+              }
+            }}
+            updateLabelFilter={updateLabelFilter}
+            clearFilters={clearFilters}
+            hasActiveFilters={hasActiveFilters}
+            users={users}
+            workspaceLabels={workspaceLabels}
+            iconOnly
+          />
+        </>
+      }
     >
       <PageTitle title={`${project?.name}'s backlog`} />
       <div className="relative flex flex-col h-full min-h-0 overflow-hidden">
-        <div className="border-border/80 border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/70">
+        <div className="hidden border-border/80 border-b bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/70 md:block">
           <div className="flex min-h-12 items-center px-3 py-2 md:px-4">
             <div className="flex w-full items-center gap-2">
               <div className="flex w-full flex-wrap items-center gap-1.5">

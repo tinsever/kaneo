@@ -29,15 +29,17 @@ function RouteComponent() {
       <PageTitle title="Members" />
       <WorkspaceLayout
         title="Members"
+        showBreadcrumb={false}
         headerActions={
           <Button
             onClick={() => setIsInviteTeamMemberModalOpen(true)}
             variant="outline"
-            size="xs"
-            className="gap-1 w-full md:w-auto"
+            size="icon-xs"
+            className="gap-1 self-end md:h-7 md:w-auto md:px-2"
+            aria-label="Invite member"
           >
             <UserPlus className="w-3 h-3" />
-            Invite member
+            <span className="hidden md:inline">Invite member</span>
           </Button>
         }
       >

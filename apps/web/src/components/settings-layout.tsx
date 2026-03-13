@@ -19,6 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { UserAvatar } from "@/components/user-avatar";
 import { shortcuts } from "@/constants/shortcuts";
 import { cn } from "@/lib/cn";
 
@@ -52,13 +53,13 @@ export function SettingsLayout({
 
   return (
     <Layout>
-      <Layout.Header>
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-1 w-full">
+      <Layout.Header className="h-auto min-h-11 px-2 py-2.5 md:h-10 md:px-2 md:py-2">
+        <div className="flex items-start justify-between w-full gap-3 md:items-center">
+          <div className="flex items-center gap-1 w-full min-w-0">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <SidebarTrigger className="-ml-1 h-6 w-6" />
+                  <SidebarTrigger className="-ml-1 hidden h-6 w-6 md:flex" />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p className="flex items-center gap-2 text-[10px]">
@@ -75,9 +76,9 @@ export function SettingsLayout({
             </TooltipProvider>
             <Separator
               orientation="vertical"
-              className="mx-1.5 data-[orientation=vertical]:h-2.5"
+              className="mx-1.5 hidden data-[orientation=vertical]:h-2.5 md:flex"
             />
-            <Breadcrumb className="flex items-center gap-1 text-xs w-full">
+            <Breadcrumb className="hidden items-center gap-1 text-xs w-full md:flex">
               <BreadcrumbList>
                 <BreadcrumbItem>
                   <BreadcrumbLink href="/dashboard/settings">
@@ -90,24 +91,41 @@ export function SettingsLayout({
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+            <div className="min-w-0 md:hidden">
+              <div className="truncate text-[11px] text-muted-foreground">
+                Settings
+              </div>
+              <h1 className="text-lg leading-none font-semibold text-card-foreground">
+                {title}
+              </h1>
+            </div>
           </div>
           <div className="flex items-center gap-1.5">
             {backPath && (
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon-xs"
                 onClick={handleBack}
-                className="gap-1.5 text-xs"
+                className="h-7 w-7 md:h-auto md:w-auto md:gap-1.5 md:px-2 md:text-xs"
+                aria-label={backLabel}
               >
                 <ArrowLeft className="w-3 h-3" />
-                {backLabel}
+                <span className="hidden md:inline">{backLabel}</span>
               </Button>
             )}
+            <div className="md:hidden">
+              <UserAvatar settingsPath="/dashboard/settings/account/preferences" />
+            </div>
           </div>
         </div>
       </Layout.Header>
       <Layout.Content>
-        <div className={cn("max-w-4xl mx-auto space-y-8 py-6", className)}>
+        <div
+          className={cn(
+            "mx-auto max-w-4xl space-y-6 px-3 py-4 md:space-y-8 md:px-0 md:py-6",
+            className,
+          )}
+        >
           {description && (
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">{description}</p>

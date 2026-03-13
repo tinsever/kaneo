@@ -1,13 +1,17 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import BoardToolbar from "@/components/board/board-toolbar";
+import BoardToolbar, {
+  BoardFilterMenu,
+  BoardViewToggle,
+} from "@/components/board/board-toolbar";
 import ProjectLayout from "@/components/common/project-layout";
 import KanbanBoard from "@/components/kanban-board";
 import ListView from "@/components/list-view";
 import PageTitle from "@/components/page-title";
 import CreateTaskModal from "@/components/shared/modals/create-task-modal";
 import TaskDetailsSheet from "@/components/task/task-details-sheet";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { shortcuts } from "@/constants/shortcuts";
 import useGetLabelsByWorkspace from "@/hooks/queries/label/use-get-labels-by-workspace";
@@ -150,6 +154,49 @@ function RouteComponent() {
       workspaceId={workspaceId}
       activeView="board"
       headerActions={boardHeaderSearch}
+      mobileHeaderStart={
+        <div className="flex min-w-0 items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={() =>
+              navigate({
+                to: "/dashboard/workspace/$workspaceId",
+                params: { workspaceId },
+              })
+            }
+            className="size-7 shrink-0"
+            aria-label="Back to projects"
+          >
+            <ArrowLeft className="size-4" />
+          </Button>
+          <div className="min-w-0">
+            <div className="truncate text-sm font-medium text-foreground">
+              {project?.name ?? "Project"}
+            </div>
+          </div>
+        </div>
+      }
+      mobileHeaderEnd={
+        <>
+          <BoardViewToggle
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+            compact
+          />
+          <BoardFilterMenu
+            project={project}
+            filters={filters}
+            updateFilter={updateFilter}
+            updateLabelFilter={updateLabelFilter}
+            clearFilters={clearFilters}
+            hasActiveFilters={hasActiveFilters}
+            users={users}
+            workspaceLabels={workspaceLabels}
+            iconOnly
+          />
+        </>
+      }
     >
       <PageTitle
         title={`${project?.name} — ${viewMode === "board" ? "Board" : "List"}`}

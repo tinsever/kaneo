@@ -266,15 +266,15 @@ function ListView({ project }: ListViewProps) {
     return (
       <div
         className={cn(
-          "border-b border-border/50 transition-all duration-200 overflow-auto",
+          "overflow-auto border-border/50 border-b transition-all duration-200",
           showDropIndicator && "border-l-4 border-l-ring bg-accent/35",
         )}
       >
-        <div className="flex items-center justify-between py-2 px-4 bg-muted/60 border-b border-border/50">
+        <div className="flex items-center justify-between border-border/50 border-b bg-muted/60 px-3 py-2 md:px-4">
           <button
             type="button"
             onClick={() => toggleSection(column.id)}
-            className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-foreground transition-colors"
+            className="flex min-w-0 items-center gap-2 text-sm font-medium text-foreground transition-colors hover:text-foreground"
           >
             <ChevronRight
               className={cn(
@@ -293,14 +293,14 @@ function ListView({ project }: ListViewProps) {
             </div>
           </button>
 
-          <div className="flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-1">
             <button
               type="button"
               onClick={() => {
                 setIsTaskModalOpen(true);
                 setActiveColumn(column.id);
               }}
-              className="p-1 hover:bg-accent rounded text-muted-foreground hover:text-foreground transition-colors"
+              className="rounded p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               title="Add task"
             >
               <Plus className="w-3 h-3" />

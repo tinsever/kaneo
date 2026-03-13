@@ -64,7 +64,7 @@ function Layout({ children, className }: LayoutProps) {
         <AppSidebar />
         <SidebarInset
           className={cn(
-            "m-2 flex flex-1 flex-col overflow-auto rounded-xl border border-border/80 bg-background pb-[calc(env(safe-area-inset-bottom)+5.5rem)] shadow-sm/5 md:pb-0",
+            "m-1 p-1 md:p-0 md:m-2 flex flex-1 flex-col overflow-auto rounded-xl md:border md:border-border/80 bg-background pb-[calc(env(safe-area-inset-bottom)+5.5rem)] shadow-sm/5 md:pb-0",
             className,
           )}
         >

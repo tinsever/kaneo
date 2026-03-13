@@ -44,8 +44,8 @@ function SettingsLayout() {
   return (
     <>
       <PageTitle title="Settings" />
-      <div className="flex flex-col gap-4 p-4 bg-sidebar w-full h-full">
-        <div className="flex flex-col gap-4 bg-card h-full border border-border rounded-md p-4 relative overflow-hidden">
+      <div className="flex h-full w-full flex-col gap-3 bg-sidebar p-2 md:gap-4 md:p-4">
+        <div className="relative flex h-full flex-col gap-3 overflow-hidden rounded-md border border-border bg-card p-3 md:gap-4 md:p-4">
           <div>
             <Button
               variant="ghost"
@@ -56,15 +56,18 @@ function SettingsLayout() {
                   params: { workspaceId: workspace?.id ?? "" },
                 })
               }
+              className="h-8 px-2 text-xs md:h-auto md:px-3"
             >
               <ChevronLeft className=" border border-border rounded-md p-1 size-6" />
-              Back to Workspace
+              <span className="hidden md:inline">Back to Workspace</span>
             </Button>
 
-            <h1 className="text-2xl font-semibold pl-2 mt-2">Settings</h1>
+            <h1 className="mt-2 pl-1 text-xl font-semibold md:pl-2 md:text-2xl">
+              Settings
+            </h1>
 
-            <Tabs value={activeTab} className="w-[400px] pt-2">
-              <TabsList className="bg-sidebar gap-2">
+            <Tabs value={activeTab} className="w-full pt-2 md:max-w-[400px]">
+              <TabsList className="h-auto w-full justify-start gap-1 overflow-x-auto bg-sidebar p-1 md:gap-2">
                 <TabsTrigger
                   className="[&[data-state=active]]:border [&[data-state=active]]:border-border [&[data-state=active]]:rounded-md [&[data-state=active]]:bg-card"
                   value="account"

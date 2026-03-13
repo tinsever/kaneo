@@ -31,8 +31,13 @@ function SearchComponent() {
       <PageTitle title="Search" />
       <WorkspaceLayout
         title="Search"
+        showBreadcrumb={false}
         headerActions={
-          <Link to="/dashboard/workspace/$workspaceId" params={{ workspaceId }}>
+          <Link
+            to="/dashboard/workspace/$workspaceId"
+            params={{ workspaceId }}
+            className="hidden md:inline-flex"
+          >
             <Button variant="ghost" size="sm" className="gap-2">
               <ArrowLeft className="w-4 h-4" />
               Back to Dashboard
@@ -40,7 +45,7 @@ function SearchComponent() {
           </Link>
         }
       >
-        <div className="space-y-6">
+        <div className="space-y-5 p-1 md:space-y-6">
           <div>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -53,7 +58,7 @@ function SearchComponent() {
                     handleSearch(searchQuery);
                   }
                 }}
-                className="pl-10 h-12 text-lg"
+                className="h-11 pl-10 text-base md:h-12 md:text-lg"
                 autoFocus
               />
               <Button

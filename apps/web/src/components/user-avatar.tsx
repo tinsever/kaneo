@@ -16,7 +16,15 @@ import useSignOut from "@/hooks/mutations/use-sign-out";
 import { toast } from "@/lib/toast";
 import useProjectStore from "@/store/project";
 
-export function UserAvatar() {
+type UserAvatarProps = {
+  settingsPath?:
+    | "/dashboard/settings/account/information"
+    | "/dashboard/settings/account/preferences";
+};
+
+export function UserAvatar({
+  settingsPath = "/dashboard/settings/account/information",
+}: UserAvatarProps) {
   const { user } = useAuth();
   const { mutateAsync: signOut, isPending } = useSignOut();
   const queryClient = useQueryClient();
@@ -41,7 +49,7 @@ export function UserAvatar() {
   };
 
   const handleSettings = () => {
-    navigate({ to: "/dashboard/settings/account/information" });
+    navigate({ to: settingsPath });
   };
 
   const initials = user.name
@@ -58,7 +66,7 @@ export function UserAvatar() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-7 w-7 rounded-full p-0 hover:bg-sidebar-accent/70"
+          className="h-8 w-8 rounded-full p-0 hover:bg-accent/70"
         >
           <Avatar className="h-7 w-7">
             <AvatarImage src={user.image ?? ""} alt={user.name || ""} />
@@ -68,7 +76,7 @@ export function UserAvatar() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-52 p-0" side="bottom" align="start">
+      <DropdownMenuContent className="w-52 p-0" side="bottom" align="end">
         <div className="px-2.5 py-2">
           <div className="flex items-center gap-2 text-left text-sm">
             <Avatar className="h-7 w-7 rounded-full">

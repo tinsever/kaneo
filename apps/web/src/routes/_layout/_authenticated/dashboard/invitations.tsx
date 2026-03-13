@@ -16,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { UserAvatar } from "@/components/user-avatar";
 import { usePendingInvitations } from "@/hooks/queries/invitation/use-pending-invitations";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/cn";
@@ -143,20 +144,30 @@ function InvitationsPage() {
     <>
       <PageTitle title="Invitations" />
       <Layout>
-        <Layout.Header>
-          <div className="flex items-center gap-1 w-full">
-            <SidebarTrigger className="-ml-1 h-6 w-6" />
-            <Separator
-              orientation="vertical"
-              className="mx-1.5 data-[orientation=vertical]:h-2.5"
-            />
-            <h1 className="text-xs text-card-foreground">
-              Pending Invitations
-            </h1>
+        <Layout.Header className="h-auto min-h-11 px-2 py-2.5 md:h-10 md:px-2 md:py-2">
+          <div className="flex items-center justify-between gap-3 w-full">
+            <div className="flex items-center gap-1 min-w-0">
+              <SidebarTrigger className="-ml-1 hidden h-6 w-6 md:flex" />
+              <Separator
+                orientation="vertical"
+                className="mx-1.5 hidden data-[orientation=vertical]:h-2.5 md:flex"
+              />
+              <div className="min-w-0">
+                <div className="truncate text-[11px] text-muted-foreground md:hidden">
+                  Dashboard
+                </div>
+                <h1 className="text-sm font-medium text-card-foreground md:text-xs md:font-normal">
+                  Pending Invitations
+                </h1>
+              </div>
+            </div>
+            <div className="md:hidden">
+              <UserAvatar settingsPath="/dashboard/settings/account/preferences" />
+            </div>
           </div>
         </Layout.Header>
         <Layout.Content>
-          <div className="p-6 space-y-6">
+          <div className="space-y-4 p-3 md:space-y-6 md:p-6">
             {isLoading ? (
               <div className="flex items-center justify-center py-20">
                 <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
@@ -175,99 +186,184 @@ function InvitationsPage() {
                 </p>
               </div>
             ) : (
-              <div className="rounded-lg border">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-b">
-                      <TableHead className="font-semibold">Workspace</TableHead>
-                      <TableHead className="font-semibold">
-                        Invited By
-                      </TableHead>
-                      <TableHead className="font-semibold">Expires</TableHead>
-                      <TableHead className="w-[100px]" />
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {invitations.map((invitation) => {
-                      const expiryStatus = getExpiryStatus(
-                        invitation.expiresAt,
-                      );
-                      const isAccepting = acceptingId === invitation.id;
-                      const isRejecting = rejectingId === invitation.id;
-                      const isProcessing = isAccepting || isRejecting;
+              <>
+                <div className="space-y-3 md:hidden">
+                  {invitations.map((invitation) => {
+                    const expiryStatus = getExpiryStatus(invitation.expiresAt);
+                    const isAccepting = acceptingId === invitation.id;
+                    const isRejecting = rejectingId === invitation.id;
+                    const isProcessing = isAccepting || isRejecting;
 
-                      return (
-                        <TableRow
-                          key={invitation.id}
-                          className={cn(
-                            expiryStatus.isUrgent &&
-                              expiryStatus.variant === "destructive" &&
-                              "bg-destructive/5",
-                          )}
-                        >
-                          <TableCell className="font-medium">
-                            {invitation.workspaceName}
-                          </TableCell>
-                          <TableCell className="text-muted-foreground text-sm">
-                            {invitation.inviterName}
-                          </TableCell>
-                          <TableCell>
-                            {expiryStatus.isUrgent && expiryStatus.variant ? (
-                              <Badge
-                                variant={expiryStatus.variant}
-                                className="text-xs font-normal"
-                              >
-                                {expiryStatus.label}
-                              </Badge>
-                            ) : (
-                              <span className="text-sm text-muted-foreground">
-                                {expiryStatus.label}
-                              </span>
-                            )}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() =>
-                                  handleAcceptInvitation(
-                                    invitation.id,
-                                    invitation.workspaceId,
-                                  )
-                                }
-                                disabled={isProcessing}
-                                className="h-7 w-7 p-0"
-                              >
-                                {isAccepting ? (
-                                  <Loader2 className="h-3 w-3 animate-spin" />
-                                ) : (
-                                  <CheckCircle className="h-3 w-3" />
-                                )}
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() =>
-                                  handleRejectInvitation(invitation.id)
-                                }
-                                disabled={isProcessing}
-                                className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
-                              >
-                                {isRejecting ? (
-                                  <Loader2 className="h-3 w-3 animate-spin" />
-                                ) : (
-                                  <X className="h-3 w-3" />
-                                )}
-                              </Button>
+                    return (
+                      <div
+                        key={invitation.id}
+                        className={cn(
+                          "rounded-xl border border-border/80 bg-card p-3 shadow-xs/5",
+                          expiryStatus.isUrgent &&
+                            expiryStatus.variant === "destructive" &&
+                            "border-destructive/25 bg-destructive/5",
+                        )}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="truncate font-medium text-foreground">
+                              {invitation.workspaceName}
                             </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
+                            <div className="mt-1 text-sm text-muted-foreground">
+                              Invited by {invitation.inviterName}
+                            </div>
+                          </div>
+                          {expiryStatus.isUrgent && expiryStatus.variant ? (
+                            <Badge
+                              variant={expiryStatus.variant}
+                              className="shrink-0 text-[11px] font-normal"
+                            >
+                              {expiryStatus.label}
+                            </Badge>
+                          ) : (
+                            <span className="shrink-0 text-xs text-muted-foreground">
+                              {expiryStatus.label}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="mt-3 flex items-center justify-end gap-1.5">
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() =>
+                              handleAcceptInvitation(
+                                invitation.id,
+                                invitation.workspaceId,
+                              )
+                            }
+                            disabled={isProcessing}
+                            aria-label={`Accept invitation to ${invitation.workspaceName}`}
+                          >
+                            {isAccepting ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            ) : (
+                              <CheckCircle className="h-3.5 w-3.5" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() =>
+                              handleRejectInvitation(invitation.id)
+                            }
+                            disabled={isProcessing}
+                            className="text-muted-foreground hover:text-destructive"
+                            aria-label={`Reject invitation to ${invitation.workspaceName}`}
+                          >
+                            {isRejecting ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            ) : (
+                              <X className="h-3.5 w-3.5" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="hidden rounded-lg border md:block">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-b">
+                        <TableHead className="font-semibold">
+                          Workspace
+                        </TableHead>
+                        <TableHead className="font-semibold">
+                          Invited By
+                        </TableHead>
+                        <TableHead className="font-semibold">Expires</TableHead>
+                        <TableHead className="w-[100px]" />
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {invitations.map((invitation) => {
+                        const expiryStatus = getExpiryStatus(
+                          invitation.expiresAt,
+                        );
+                        const isAccepting = acceptingId === invitation.id;
+                        const isRejecting = rejectingId === invitation.id;
+                        const isProcessing = isAccepting || isRejecting;
+
+                        return (
+                          <TableRow
+                            key={invitation.id}
+                            className={cn(
+                              expiryStatus.isUrgent &&
+                                expiryStatus.variant === "destructive" &&
+                                "bg-destructive/5",
+                            )}
+                          >
+                            <TableCell className="font-medium">
+                              {invitation.workspaceName}
+                            </TableCell>
+                            <TableCell className="text-muted-foreground text-sm">
+                              {invitation.inviterName}
+                            </TableCell>
+                            <TableCell>
+                              {expiryStatus.isUrgent && expiryStatus.variant ? (
+                                <Badge
+                                  variant={expiryStatus.variant}
+                                  className="text-xs font-normal"
+                                >
+                                  {expiryStatus.label}
+                                </Badge>
+                              ) : (
+                                <span className="text-sm text-muted-foreground">
+                                  {expiryStatus.label}
+                                </span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex items-center justify-end gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleAcceptInvitation(
+                                      invitation.id,
+                                      invitation.workspaceId,
+                                    )
+                                  }
+                                  disabled={isProcessing}
+                                  className="h-7 w-7 p-0"
+                                >
+                                  {isAccepting ? (
+                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                  ) : (
+                                    <CheckCircle className="h-3 w-3" />
+                                  )}
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleRejectInvitation(invitation.id)
+                                  }
+                                  disabled={isProcessing}
+                                  className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+                                >
+                                  {isRejecting ? (
+                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                  ) : (
+                                    <X className="h-3 w-3" />
+                                  )}
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              </>
             )}
           </div>
         </Layout.Content>

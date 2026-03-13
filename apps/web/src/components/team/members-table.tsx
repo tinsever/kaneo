@@ -104,7 +104,117 @@ function MembersTable({
 
   return (
     <>
-      <Table>
+      <div className="space-y-3 p-3 md:hidden">
+        {invitations
+          .filter(
+            (invitation) =>
+              invitation.status !== "accepted" &&
+              invitation.status !== "canceled",
+          )
+          ?.map((invitation) => (
+            <div
+              key={invitation.email}
+              className="rounded-xl border border-border/80 bg-card p-3 shadow-xs/5"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                      {invitation?.email?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <div className="truncate font-medium text-foreground">
+                      {invitation.email}
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      Expires{" "}
+                      {invitation.expiresAt &&
+                        new Date(invitation.expiresAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          },
+                        )}
+                    </div>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setInvitationToCancel(invitation)}
+                  className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                  aria-label="Cancel invitation"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="mt-3">
+                <span className="inline-flex items-center rounded px-1.5 py-0.5 text-xs bg-muted text-muted-foreground">
+                  {invitation.role.charAt(0).toUpperCase() +
+                    invitation.role.slice(1).toLowerCase()}{" "}
+                  (Pending)
+                </span>
+              </div>
+            </div>
+          ))}
+
+        {users?.map((member) => (
+          <div
+            key={member.user.email}
+            className="rounded-xl border border-border/80 bg-card p-3 shadow-xs/5"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <Avatar className="h-9 w-9">
+                  <AvatarImage
+                    src={member.user.image ?? ""}
+                    alt={member.user.name || ""}
+                  />
+                  <AvatarFallback className="bg-muted text-muted-foreground text-xs">
+                    {member?.user?.name?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <div className="truncate font-medium text-foreground">
+                    {member.user.name}
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    Joined{" "}
+                    {member.createdAt &&
+                      new Date(member.createdAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                  </div>
+                </div>
+              </div>
+              {currentUser?.id !== member.userId ? (
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setMemberToDelete(member)}
+                  className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                  aria-label="Remove member"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              ) : null}
+            </div>
+            <div className="mt-3">
+              <span className="inline-flex items-center rounded px-1.5 py-0.5 text-xs bg-muted text-muted-foreground">
+                {member.role.charAt(0).toUpperCase() +
+                  member.role.slice(1).toLowerCase()}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Table className="hidden md:table">
         <TableHeader>
           <TableRow>
             <TableHead className="text-muted-foreground text-xs w-2/3 pl-6">

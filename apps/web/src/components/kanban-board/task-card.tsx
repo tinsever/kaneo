@@ -29,6 +29,7 @@ import { useDeleteTask } from "@/hooks/mutations/task/use-delete-task";
 import useExternalLinks from "@/hooks/queries/external-link/use-external-links";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import { useGetActiveWorkspaceUsers } from "@/hooks/queries/workspace-users/use-get-active-workspace-users";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { dueDateStatusColors, getDueDateStatus } from "@/lib/due-date-status";
 import { getPriorityIcon } from "@/lib/priority";
 import { toast } from "@/lib/toast";
@@ -69,6 +70,7 @@ function TaskCard({ task }: TaskCardProps) {
   const [isDeleteTaskModalOpen, setIsDeleteTaskModalOpen] = useState(false);
   const { data: externalLinks } = useExternalLinks(task.id);
   const { toggleSelection, isSelected, isFocused } = useBulkSelectionStore();
+  const isMobile = useIsMobile();
   const isTaskSelected = isSelected(task.id);
   const isTaskFocused = isFocused(task.id);
 
@@ -177,7 +179,7 @@ function TaskCard({ task }: TaskCardProps) {
           {/** biome-ignore lint/a11y/noStaticElementInteractions: false positive for onClick and onKeyDown */}
           <div
             onClick={handleTaskCardClick}
-            className={`group relative cursor-move rounded-lg border bg-background p-3 shadow-xs/5 transition-all duration-200 ease-out ${
+            className={`group relative cursor-move rounded-lg border bg-background p-2.5 shadow-xs/5 transition-all duration-200 ease-out md:p-3 ${
               isDragging
                 ? "border-ring/40 bg-card shadow-lg"
                 : "hover:border-border/90 hover:bg-background hover:shadow-sm"
@@ -195,13 +197,13 @@ function TaskCard({ task }: TaskCardProps) {
             }}
           >
             {showTaskNumbers && (
-              <div className="mb-2 text-[10px] font-mono text-muted-foreground/90">
+              <div className="mb-2 hidden text-[10px] font-mono text-muted-foreground/90 md:block">
                 {project?.slug}-{task.number}
               </div>
             )}
 
             {showAssignees && (
-              <div className="absolute top-3 right-3">
+              <div className="absolute top-3 right-3 hidden md:block">
                 {task.userId ? (
                   <Avatar className="h-5 w-5">
                     <AvatarImage
@@ -225,12 +227,17 @@ function TaskCard({ task }: TaskCardProps) {
               </div>
             )}
 
-            <div className="mb-2.5 pr-6">
+            <div className="mb-2 pr-0 md:mb-2.5 md:pr-6">
+              {showTaskNumbers ? (
+                <div className="mb-1 inline-flex items-center rounded-md bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground md:hidden">
+                  {project?.slug}-{task.number}
+                </div>
+              ) : null}
               <div
-                className="overflow-hidden break-words text-sm leading-5 font-medium text-foreground/95"
+                className="overflow-hidden break-words text-[13px] leading-4.5 font-medium text-foreground/95 md:text-sm md:leading-5"
                 style={{
                   display: "-webkit-box",
-                  WebkitLineClamp: 3,
+                  WebkitLineClamp: isMobile ? 2 : 3,
                   WebkitBoxOrient: "vertical",
                   wordBreak: "break-word",
                   hyphens: "auto",
@@ -241,12 +248,12 @@ function TaskCard({ task }: TaskCardProps) {
             </div>
 
             {showLabels && (
-              <div className="mb-2.5">
+              <div className="mb-2 md:mb-2.5">
                 <TaskCardLabels taskId={task.id} />
               </div>
             )}
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-1.5">
               {showPriority && (
                 <span className="inline-flex items-center gap-1 rounded border border-border/70 bg-muted/55 px-2 py-1 text-[10px] font-medium text-muted-foreground">
                   {getPriorityIcon(task.priority ?? "")}
@@ -269,6 +276,26 @@ function TaskCard({ task }: TaskCardProps) {
                   )}
                   <span>{format(new Date(task.dueDate), "MMM d")}</span>
                 </div>
+              )}
+
+              {showAssignees && (
+                <span className="inline-flex items-center md:hidden">
+                  {task.userId ? (
+                    <Avatar className="h-5 w-5">
+                      <AvatarImage
+                        src={assignee?.user?.image ?? ""}
+                        alt={assignee?.user?.name || ""}
+                      />
+                      <AvatarFallback className="border border-border/30 text-[10px] font-medium">
+                        {assignee?.user?.name?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  ) : (
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full border border-border bg-muted text-[10px] font-medium text-muted-foreground">
+                      ?
+                    </span>
+                  )}
+                </span>
               )}
 
               {pullRequests.length === 1 && (

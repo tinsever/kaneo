@@ -44,10 +44,10 @@ function RouteComponent() {
       .join("") || "WS";
 
   return (
-    <div className="flex gap-6 h-full">
-      <aside className="w-64 flex-shrink-0">
+    <div className="flex h-full flex-col gap-4 md:flex-row md:gap-6">
+      <aside className="w-full flex-shrink-0 md:w-64">
         <div className="p-2">
-          <div className="mb-1 flex items-center gap-3 rounded-md px-2 py-2">
+          <div className="mb-1 hidden items-center gap-3 rounded-md px-2 py-2 md:flex">
             <Avatar className="h-8 w-8">
               <AvatarImage
                 src={workspace?.logo ?? ""}
@@ -65,7 +65,7 @@ function RouteComponent() {
             </div>
           </div>
 
-          <SidebarGroup className="gap-1 p-1">
+          <SidebarGroup className="hidden gap-1 p-1 md:flex">
             <SidebarGroupLabel className="h-7 px-2 text-[11px] uppercase tracking-wide text-sidebar-foreground/70">
               Workspace
             </SidebarGroupLabel>
@@ -91,10 +91,25 @@ function RouteComponent() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+
+          <div className="flex gap-2 overflow-x-auto px-1 pt-2 md:hidden">
+            {menuItems.map((item) => (
+              <Button
+                key={item.title}
+                render={<Link to={item.url} />}
+                variant={isActivePath(item.url) ? "secondary" : "ghost"}
+                size="sm"
+                className="h-8 shrink-0 gap-1.5 rounded-full px-3 text-xs"
+              >
+                <item.icon className="h-3.5 w-3.5" />
+                <span>{item.title}</span>
+              </Button>
+            ))}
+          </div>
         </div>
       </aside>
 
-      <div className="flex-1 min-w-0 overflow-y-auto">
+      <div className="min-w-0 flex-1 overflow-y-auto">
         <Outlet />
       </div>
     </div>

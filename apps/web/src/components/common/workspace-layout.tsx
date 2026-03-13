@@ -15,6 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { UserAvatar } from "@/components/user-avatar";
 import { shortcuts } from "@/constants/shortcuts";
 import useActiveWorkspace from "@/hooks/queries/workspace/use-active-workspace";
 import { cn } from "@/lib/cn";
@@ -142,6 +143,9 @@ export default function WorkspaceLayout({
             )}
           >
             {headerActions}
+            <div className="md:hidden">
+              <UserAvatar settingsPath="/dashboard/settings/account/preferences" />
+            </div>
           </div>
         </div>
       </Layout.Header>

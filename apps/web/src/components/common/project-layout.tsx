@@ -15,6 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { UserAvatar } from "@/components/user-avatar";
 import { shortcuts } from "@/constants/shortcuts";
 import useGetProject from "@/hooks/queries/project/use-get-project";
 import { cn } from "@/lib/cn";
@@ -23,6 +24,8 @@ type ProjectLayoutProps = {
   projectId: string;
   workspaceId: string;
   headerActions?: ReactNode;
+  mobileHeaderStart?: ReactNode;
+  mobileHeaderEnd?: ReactNode;
   children: ReactNode;
   showViewSwitcher?: boolean;
   activeView?: "backlog" | "board";
@@ -32,6 +35,8 @@ export default function ProjectLayout({
   projectId,
   workspaceId,
   headerActions,
+  mobileHeaderStart,
+  mobileHeaderEnd,
   children,
   showViewSwitcher = true,
   activeView,
@@ -41,6 +46,8 @@ export default function ProjectLayout({
   const { data: project } = useGetProject({ id: projectId, workspaceId });
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] =
     useState(false);
+  const hasCustomMobileHeader =
+    mobileHeaderStart !== undefined || mobileHeaderEnd !== undefined;
 
   const resolvedView =
     activeView ??
@@ -82,7 +89,12 @@ export default function ProjectLayout({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <SidebarTrigger className="-ml-1 h-7 w-7 cursor-pointer text-foreground/85 hover:text-foreground" />
+                  <SidebarTrigger
+                    className={cn(
+                      "-ml-1 h-7 w-7 cursor-pointer text-foreground/85 hover:text-foreground",
+                      hasCustomMobileHeader && "hidden md:flex",
+                    )}
+                  />
                 </TooltipTrigger>
                 <TooltipContent>
                   <p className="flex items-center gap-2 text-[10px]">
@@ -98,7 +110,12 @@ export default function ProjectLayout({
               </Tooltip>
             </TooltipProvider>
 
-            <div className="h-4 w-px shrink-0 bg-border/80" />
+            <div
+              className={cn(
+                "h-4 w-px shrink-0 bg-border/80",
+                hasCustomMobileHeader && "hidden md:block",
+              )}
+            />
 
             <div className="hidden min-w-0 items-center gap-1 md:flex">
               <WorkspaceCrumbSelect />
@@ -112,17 +129,21 @@ export default function ProjectLayout({
               />
             </div>
 
-            <div className="md:hidden">
-              <MobileProjectNav
-                workspaceId={workspaceId}
-                projectId={projectId}
-                activeView={resolvedView}
-                onSelectBacklog={handleNavigateToBacklog}
-                onSelectBoard={handleNavigateToBoard}
-                onSelectProject={handleProjectSwitch}
-                onAddProject={() => setIsCreateProjectModalOpen(true)}
-              />
-            </div>
+            {hasCustomMobileHeader ? (
+              <div className="min-w-0 md:hidden">{mobileHeaderStart}</div>
+            ) : (
+              <div className="md:hidden">
+                <MobileProjectNav
+                  workspaceId={workspaceId}
+                  projectId={projectId}
+                  activeView={resolvedView}
+                  onSelectBacklog={handleNavigateToBacklog}
+                  onSelectBoard={handleNavigateToBoard}
+                  onSelectProject={handleProjectSwitch}
+                  onAddProject={() => setIsCreateProjectModalOpen(true)}
+                />
+              </div>
+            )}
 
             {showViewSwitcher && (
               <div className="hidden h-8 items-center gap-0.5 rounded-lg border border-border/80 bg-background p-0.5 sm:inline-flex">
@@ -155,7 +176,17 @@ export default function ProjectLayout({
           </div>
 
           <div className="flex shrink-0 items-center gap-1.5">
-            {headerActions}
+            {mobileHeaderEnd ? (
+              <div className="flex items-center gap-1 md:hidden">
+                {mobileHeaderEnd}
+              </div>
+            ) : null}
+            <div className={cn(mobileHeaderEnd && "hidden md:flex")}>
+              {headerActions}
+            </div>
+            <div className="md:hidden">
+              <UserAvatar settingsPath="/dashboard/settings/account/preferences" />
+            </div>
           </div>
         </div>
       </Layout.Header>
