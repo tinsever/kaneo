@@ -15,6 +15,10 @@ config();
 const DEFAULT_MAX_IMAGE_UPLOAD_BYTES = 10 * 1024 * 1024;
 const DEFAULT_PRESIGN_TTL_SECONDS = 300;
 
+/** HeadObject retries after upload (some S3-compatible backends are briefly inconsistent). */
+const OBJECT_VERIFY_MAX_ATTEMPTS = 6;
+const OBJECT_VERIFY_RETRY_BASE_MS = 100;
+
 const allowedImageMimeTypes = new Set([
   "image/apng",
   "image/avif",
@@ -269,16 +273,66 @@ export function assertTaskImageKeyMatchesContext(
   return key.startsWith(prefix);
 }
 
+function sleep(ms: number) {
+  return new Promise<void>((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+function isS3ObjectNotFoundError(error: unknown) {
+  if (!error || typeof error !== "object") return false;
+  const e = error as {
+    name?: string;
+    $metadata?: { httpStatusCode?: number };
+  };
+  if (e.$metadata?.httpStatusCode === 404) return true;
+  if (e.name === "NotFound" || e.name === "NoSuchKey") return true;
+  return false;
+}
+
 export async function assertObjectExists(key: string) {
   const config = getStorageConfig();
   const client = getClient(config);
 
-  await client.send(
-    new HeadObjectCommand({
-      Bucket: config.bucket,
-      Key: key,
-    }),
-  );
+  let lastHeadError: unknown;
+
+  for (let attempt = 0; attempt < OBJECT_VERIFY_MAX_ATTEMPTS; attempt++) {
+    try {
+      await client.send(
+        new HeadObjectCommand({
+          Bucket: config.bucket,
+          Key: key,
+        }),
+      );
+      return;
+    } catch (error) {
+      lastHeadError = error;
+      if (!isS3ObjectNotFoundError(error)) {
+        throw error;
+      }
+      if (attempt < OBJECT_VERIFY_MAX_ATTEMPTS - 1) {
+        await sleep(OBJECT_VERIFY_RETRY_BASE_MS * 2 ** attempt);
+      }
+    }
+  }
+
+  try {
+    const response = await client.send(
+      new GetObjectCommand({
+        Bucket: config.bucket,
+        Key: key,
+        Range: "bytes=0-0",
+      }),
+    );
+    if (response.Body && "transformToByteArray" in response.Body) {
+      await response.Body.transformToByteArray();
+    }
+  } catch (error) {
+    if (!isS3ObjectNotFoundError(error)) {
+      throw error;
+    }
+    throw lastHeadError;
+  }
 }
 
 export async function getPrivateObject(key: string): Promise<AssetObject> {
