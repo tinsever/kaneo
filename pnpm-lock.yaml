@@ -239,6 +239,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.2(react@19.2.4))
+      '@kaneo/libs':
+        specifier: workspace:*
+        version: link:../../packages/libs
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
         version: 1.2.12(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -471,9 +474,6 @@ importers:
         specifier: ^5.0.11
         version: 5.0.11(@types/react@19.2.14)(immer@11.1.4)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
     devDependencies:
-      '@kaneo/libs':
-        specifier: workspace:*
-        version: link:../../packages/libs
       '@tailwindcss/postcss':
         specifier: ^4.2.1
         version: 4.2.1

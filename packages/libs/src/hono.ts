@@ -2,8 +2,9 @@
 
 import type { AppType } from "@kaneo/api";
 import { hc } from "hono/client";
+import { resolveApiBaseUrl } from "./resolve-api-base-url";
 
-const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:1337";
+const baseUrl = resolveApiBaseUrl(import.meta.env.VITE_API_URL);
 const apiUrl = baseUrl.endsWith("/api") ? baseUrl : `${baseUrl}/api`;
 
 export const client = hc<AppType>(apiUrl, {

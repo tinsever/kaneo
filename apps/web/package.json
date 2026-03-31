@@ -94,10 +94,10 @@
 		"turndown": "^7.2.2",
 		"turndown-plugin-gfm": "^1.0.2",
 		"zod": "^4.3.6",
-		"zustand": "^5.0.11"
+		"zustand": "^5.0.11",
+		"@kaneo/libs": "workspace:*"
 	},
 	"devDependencies": {
-		"@kaneo/libs": "workspace:*",
 		"@tailwindcss/postcss": "^4.2.1",
 		"@types/node": "^25.5.0",
 		"@types/react": "^19.2.14",
