@@ -20,6 +20,7 @@
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "test:unit": "vitest run --config vitest.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:migration:upgrade": "tsx scripts/check-migration-upgrade.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
