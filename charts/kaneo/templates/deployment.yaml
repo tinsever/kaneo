@@ -34,6 +34,8 @@ spec:
               containerPort: {{ .Values.api.service.targetPort }}
               protocol: TCP
           env:
+            - name: TZ
+              value: UTC
             # Updated to support Better Auth
             - name: BETTER_AUTH_SECRET
               {{- if .Values.api.env.existingSecret.enabled }}
@@ -107,6 +109,8 @@ spec:
               containerPort: 5173
               protocol: TCP
           env:
+            - name: TZ
+              value: UTC
             - name: KANEO_API_URL
               value: "{{- if .Values.web.env.apiUrl -}}
                 {{- .Values.web.env.apiUrl -}}
