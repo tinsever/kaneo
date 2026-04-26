@@ -42,6 +42,8 @@ spec:
               {{- end }}
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
+            - name: TZ
+              value: UTC
           livenessProbe:
             exec:
               command:
