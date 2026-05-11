@@ -1,7 +1,7 @@
 import { windowId } from "@kaneo/libs";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import { getApiUrl } from "@/fetchers/get-api-url.ts";
+import { getApiUrl } from "@/fetchers/get-api-url";
 import { authClient } from "@/lib/auth-client";
 
 export function getWsUrl(projectId: string) {
